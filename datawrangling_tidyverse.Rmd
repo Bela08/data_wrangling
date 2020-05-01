@@ -112,46 +112,6 @@ iris
 library(tidyverse)
 as_tibble(iris)
 ```
-
----
-
-class: inverse, center, middle
-
-# Let's go over the syntax
-
----
-class: center, middle
-# `dplyr` function
-
-
-<img src="img/dplyr.png" width=30%>
-
----
-
-# `select()`
-
-![](img/xls-select.PNG)
-
----
-
-# `filter()`
-
-![](img/xls-filter.PNG)
-
----
-# `arrange()`
-
-![](img/xls-arrange.PNG)
----
-
-# `mutate()`
-
-![](img/xls-mutate.PNG)
----
-
-# `group_by(), summarize()`
-
-![](img/xls-summary.PNG)
 ---
 
 # Pipe ("then")
@@ -175,14 +135,78 @@ data %>%
 ```
 ]
 
-
---- 
 ---
-class: inverse, center, middle
-
-# Lets start practicing 
 ---
 
+class: center, middle
+
+# `readr` package
+
+<img src="img/readr.png" width=30%>
+
+---
+
+# read_xxx function
+
+* Neater import than `read.table` and `read.csv`
+
+* Does data check and prints a report of the data imported
+
+* Character columns are not converted to factors
+
+* Most useful are `read_csv`, `read_table`, and `read_delim`
+
+* Compatible with pipe workflow
+
+---
+# Example
+
+```{r}
+mydata<- read_csv("data/sub_PanTHERIA.csv")
+```
+
+---
+
+```{r}
+mydata
+```
+
+
+---
+class: center, middle
+
+# `janitor` package
+
+<img src="img/janitor.png" width=40%>
+---
+# `clean_names()` function
+
+* cleans the column names to something more computer friendly
+
+* For example, brings all the column names to lowercase and adds underscores between words
+---
+
+# Regular column names
+```{r}
+mydata
+```
+
+---
+# Clean column names
+
+```{r}
+mydata %>% 
+  janitor::clean_names()
+```
+
+---
+class: center, middle
+# `dplyr` function
+
+
+<img src="img/dplyr.png" width=30%>
+
+---
 # Load the Star Wars data
 
 ```{r}
@@ -191,9 +215,16 @@ data(starwars)
 starwars
 ```
 ---
-# Select the name, height, mass, and species columns only
 
---
+# `select()`
+
+![](img/xls-select.PNG)
+
+---
+
+# Example: Select the name, height, mass, and species columns only
+
+
 ```{r}
 starwars %>% 
     select(name, height, mass, species)
@@ -201,9 +232,21 @@ starwars %>%
 
 ---
 
-# Add a bmi column (`mass/(0.01*height)^2`)
+# Select everything but the column mass
+```{r}
+starwars %>% 
+    select(-mass)
 
---
+```
+---
+
+# `mutate()`
+
+![](img/xls-mutate.PNG)
+---
+
+# Example: Add a bmi column (`mass/(0.01*height)^2`)
+
 ```{r}
 starwars %>% 
     select(name, height, mass, species) %>% 
@@ -211,9 +254,21 @@ starwars %>%
 ```
 
 ---
+class: exercise
+
+# Lets start practicing 
+
+Select the columns sex, birth year, species, and height and add a column that calculate the average height for each species
+
+---
+
+# `arrange()`
+
+![](img/xls-arrange.PNG)
+---
 
 # Sort the data based on the bmi
---
+
 ```{r}
 starwars %>% 
     select(name, height, mass, species) %>% 
@@ -222,6 +277,12 @@ starwars %>%
 ```
 
 ---
+# `filter()`
+
+![](img/xls-filter.PNG)
+
+---
+
 
 # Filter the data to have only Droids (found in species column)
 
@@ -234,7 +295,6 @@ starwars %>%
 ```
 
 ---
-
 # Filter the same data to have only Droids shorter than 100 cm
 
 --
@@ -246,8 +306,12 @@ starwars %>%
 ```
 
 ---
+# `group_by(), summarize()`
 
-## Create a summary data in which you have the avarage mass, maximum hight, and the number of individuals from each species, and sort it by the number of individuals
+![](img/xls-summary.PNG)
+---
+
+## Create a summary data in which you have the average mass, maximum height, and the number of individuals from each species, and sort it by the number of individuals
 --
 
 ```{r}
@@ -262,16 +326,15 @@ starwars %>%
 
 ---
 
-class: inverse, center, middle
+class: exercise
 
 # Your turn
----
 
-- What is the most common eye color?
+What is the most common eye color?
 
-- Who is the youngest human?
+Who is the youngest human?
 
-- Which homeworld has the most characters?
+Which homeworld has the most characters?
 
 ---
 # Rename columns with `rename()`
@@ -300,6 +363,12 @@ starwars %>%
   left_join(starwars,by = "name")
 ```
 
+---
+class: exercise
+
+# Practice time!
+
+Create a new data with species mass, calculate the bmi, and join it with the starwars data
 
 ---
 # What else can you do?
@@ -346,67 +415,13 @@ sw <- starwars %>%
 sw %>% 
   pivot_longer(cols = -films,names_to = "name",values_to = "present")
 ```
----
-class: center, middle
-
-# `readr` package
-
-<img src="img/readr.png" width=30%>
 
 ---
+class: exercise
 
-# read_xxx function
+#Lets practice!
 
-* Neater import than `read.table` and `read.csv`
-
-* Does data check and prints a report of the data imported
-
-* Character columns are not converted to factors
-
-* Most useful are `read_csv`, `read_table`, and `read_delim`
-
-* Competible with pipe workflow
-
----
-# Example
-
-```{r}
-mydata<- read_csv("data/sub_PanTHERIA.csv")
-```
-
----
-
-```{r}
-mydata
-```
-
-
----
-class: center, middle
-
-# `janitor` package
-
-<img src="img/janitor.png" width=40%>
----
-# `clean_names()` function
-
-* cleans the column names to something more computer friendly
-
-* For example, brings all the column names to lowercase and adds underscores between words
----
-
-# Regular column names
-```{r}
-mydata
-```
-
----
-# Clean column names
-
-```{r}
-mydata %>% 
-  janitor::clean_names()
-```
+create a long format of the subset data species, mass, height, and birth year with the species column, one column with the categories mass,height, birth year and one column with the values
 
 ---
 # `nest` datasets
@@ -449,7 +464,7 @@ starwars %>%
 ```
 
 ---
-# Combin `nest()` with `map()`
+# Combine `nest()` with `map()`
 
 ```{r}
 lm_nest<- starwars %>% 
@@ -481,13 +496,26 @@ Allows you to print and save model results in a tabular view
 broom::tidy(lm_nest$lm_results[[1]])
 ```
 
+
 ---
---- 
+class: exercise
 
-.center[
+# Your turn!
+
+Group the starwars dataset based on sex and nest it. 
+
+Add a column with linear model summary for each species 
+
+Add a column with a plot for the height as a function of mass for each sex
+
+plot all the plots side by side (use `cowplot` package)
+
+---
+
+
+class: inverse, center, middle
+
 # Other function that are compatible with ` %>% `
-]
-
 
 ---
 
@@ -520,3 +548,8 @@ starwars %>%
   summary()
 ```
 
+---
+
+class: inverse, center, middle
+
+# That's it!

@@ -13,7 +13,7 @@ class: center, middle, inverse, title-slide
 
 # Data wrangling with <code>tidyverse</code>
 ## Maria Novosolov
-### 27-04-2020
+### 01-05-2020
 
 ---
 
@@ -295,46 +295,6 @@ as_tibble(iris)
 ## 10          4.9         3.1          1.5         0.1 setosa 
 ## # … with 140 more rows
 ```
-
----
-
-class: inverse, center, middle
-
-# Let's go over the syntax
-
----
-class: center, middle
-# `dplyr` function
-
-
-&lt;img src="img/dplyr.png" width=30%&gt;
-
----
-
-# `select()`
-
-![](img/xls-select.PNG)
-
----
-
-# `filter()`
-
-![](img/xls-filter.PNG)
-
----
-# `arrange()`
-
-![](img/xls-arrange.PNG)
----
-
-# `mutate()`
-
-![](img/xls-mutate.PNG)
----
-
-# `group_by(), summarize()`
-
-![](img/xls-summary.PNG)
 ---
 
 # Pipe ("then")
@@ -358,399 +318,9 @@ data %&gt;%
 ```
 ]
 
-
---- 
 ---
-class: inverse, center, middle
-
-# Lets start practicing 
 ---
 
-# Load the Star Wars data
-
-
-```r
-library(tidyverse)
-data(starwars)
-starwars
-```
-
-```
-## # A tibble: 87 x 13
-##    name  height  mass hair_color skin_color eye_color birth_year gender
-##    &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; 
-##  1 Luke…    172    77 blond      fair       blue            19   male  
-##  2 C-3PO    167    75 &lt;NA&gt;       gold       yellow         112   &lt;NA&gt;  
-##  3 R2-D2     96    32 &lt;NA&gt;       white, bl… red             33   &lt;NA&gt;  
-##  4 Dart…    202   136 none       white      yellow          41.9 male  
-##  5 Leia…    150    49 brown      light      brown           19   female
-##  6 Owen…    178   120 brown, gr… light      blue            52   male  
-##  7 Beru…    165    75 brown      light      blue            47   female
-##  8 R5-D4     97    32 &lt;NA&gt;       white, red red             NA   &lt;NA&gt;  
-##  9 Bigg…    183    84 black      light      brown           24   male  
-## 10 Obi-…    182    77 auburn, w… fair       blue-gray       57   male  
-## # … with 77 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
-## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;
-```
----
-# Select the name, height, mass, and species columns only
-
---
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species)
-```
-
-```
-## # A tibble: 87 x 4
-##    name               height  mass species
-##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  
-##  1 Luke Skywalker        172    77 Human  
-##  2 C-3PO                 167    75 Droid  
-##  3 R2-D2                  96    32 Droid  
-##  4 Darth Vader           202   136 Human  
-##  5 Leia Organa           150    49 Human  
-##  6 Owen Lars             178   120 Human  
-##  7 Beru Whitesun lars    165    75 Human  
-##  8 R5-D4                  97    32 Droid  
-##  9 Biggs Darklighter     183    84 Human  
-## 10 Obi-Wan Kenobi        182    77 Human  
-## # … with 77 more rows
-```
-
----
-
-# Add a bmi column (`mass/(0.01*height)^2`)
-
---
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species) %&gt;% 
-    mutate(bmi = mass/(0.01*height)^2)
-```
-
-```
-## # A tibble: 87 x 5
-##    name               height  mass species   bmi
-##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
-##  1 Luke Skywalker        172    77 Human    26.0
-##  2 C-3PO                 167    75 Droid    26.9
-##  3 R2-D2                  96    32 Droid    34.7
-##  4 Darth Vader           202   136 Human    33.3
-##  5 Leia Organa           150    49 Human    21.8
-##  6 Owen Lars             178   120 Human    37.9
-##  7 Beru Whitesun lars    165    75 Human    27.5
-##  8 R5-D4                  97    32 Droid    34.0
-##  9 Biggs Darklighter     183    84 Human    25.1
-## 10 Obi-Wan Kenobi        182    77 Human    23.2
-## # … with 77 more rows
-```
-
----
-
-# Sort the data based on the bmi
---
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species) %&gt;% 
-    mutate(bmi = mass/(0.01*height)^2) %&gt;% 
-    arrange(desc(bmi))
-```
-
-```
-## # A tibble: 87 x 5
-##    name                  height  mass species          bmi
-##    &lt;chr&gt;                  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;
-##  1 Jabba Desilijic Tiure    175  1358 Hutt           443. 
-##  2 Dud Bolt                  94    45 Vulptereen      50.9
-##  3 Yoda                      66    17 Yoda's species  39.0
-##  4 Owen Lars                178   120 Human           37.9
-##  5 IG-88                    200   140 Droid           35  
-##  6 R2-D2                     96    32 Droid           34.7
-##  7 Grievous                 216   159 Kaleesh         34.1
-##  8 R5-D4                     97    32 Droid           34.0
-##  9 Jek Tono Porkins         180   110 Human           34.0
-## 10 Darth Vader              202   136 Human           33.3
-## # … with 77 more rows
-```
-
----
-
-# Filter the data to have only Droids (found in species column)
-
---
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species) %&gt;% 
-    mutate(bmi = mass/(0.01*height)^2) %&gt;% 
-    filter(species == "Droid")
-```
-
-```
-## # A tibble: 5 x 5
-##   name  height  mass species   bmi
-##   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
-## 1 C-3PO    167    75 Droid    26.9
-## 2 R2-D2     96    32 Droid    34.7
-## 3 R5-D4     97    32 Droid    34.0
-## 4 IG-88    200   140 Droid    35  
-## 5 BB8       NA    NA Droid    NA
-```
-
----
-
-# Filter the same data to have only Droids shorter than 100 cm
-
---
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species) %&gt;% 
-    mutate(bmi = mass/(0.01*height)^2) %&gt;% 
-    filter(species == "Droid", height &lt; 100)
-```
-
-```
-## # A tibble: 2 x 5
-##   name  height  mass species   bmi
-##   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
-## 1 R2-D2     96    32 Droid    34.7
-## 2 R5-D4     97    32 Droid    34.0
-```
-
----
-
-## Create a summary data in which you have the avarage mass, maximum hight, and the number of individuals from each species, and sort it by the number of individuals
---
-
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species) %&gt;% 
-    group_by(species) %&gt;% 
-    summarize(count = n(),
-              avg_mass = mean(mass, na.rm = TRUE),
-              max_height = max(height, na.rm = TRUE)) %&gt;% 
-    arrange(desc(count))
-```
-
-```
-## # A tibble: 38 x 4
-##    species  count avg_mass max_height
-##    &lt;chr&gt;    &lt;int&gt;    &lt;dbl&gt;      &lt;int&gt;
-##  1 Human       35     82.8        202
-##  2 Droid        5     69.8        200
-##  3 &lt;NA&gt;         5     48          183
-##  4 Gungan       3     74          224
-##  5 Kaminoan     2     88          229
-##  6 Mirialan     2     53.1        170
-##  7 Twi'lek      2     55          180
-##  8 Wookiee      2    124          234
-##  9 Zabrak       2     80          175
-## 10 Aleena       1     15           79
-## # … with 28 more rows
-```
-
----
-
-class: inverse, center, middle
-
-# Your turn
----
-
-- What is the most common eye color?
-
-- Who is the youngest human?
-
-- Which homeworld has the most characters?
-
----
-# Rename columns with `rename()`
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species) %&gt;% 
-    rename(char_name = name)
-```
-
-```
-## # A tibble: 87 x 4
-##    char_name          height  mass species
-##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  
-##  1 Luke Skywalker        172    77 Human  
-##  2 C-3PO                 167    75 Droid  
-##  3 R2-D2                  96    32 Droid  
-##  4 Darth Vader           202   136 Human  
-##  5 Leia Organa           150    49 Human  
-##  6 Owen Lars             178   120 Human  
-##  7 Beru Whitesun lars    165    75 Human  
-##  8 R5-D4                  97    32 Droid  
-##  9 Biggs Darklighter     183    84 Human  
-## 10 Obi-Wan Kenobi        182    77 Human  
-## # … with 77 more rows
-```
----
-# `rename_all()`
-
-Change all the column names to upper case
-
-```r
-starwars %&gt;% 
-    select(name, height, mass, species) %&gt;% 
-    rename_all(toupper)
-```
-
-```
-## # A tibble: 87 x 4
-##    NAME               HEIGHT  MASS SPECIES
-##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  
-##  1 Luke Skywalker        172    77 Human  
-##  2 C-3PO                 167    75 Droid  
-##  3 R2-D2                  96    32 Droid  
-##  4 Darth Vader           202   136 Human  
-##  5 Leia Organa           150    49 Human  
-##  6 Owen Lars             178   120 Human  
-##  7 Beru Whitesun lars    165    75 Human  
-##  8 R5-D4                  97    32 Droid  
-##  9 Biggs Darklighter     183    84 Human  
-## 10 Obi-Wan Kenobi        182    77 Human  
-## # … with 77 more rows
-```
-
----
-# `left_join()`
-
-
-```r
-starwars %&gt;% 
-  mutate(height_m = height*0.01) %&gt;% 
-  select(name,height_m) %&gt;% 
-  left_join(starwars,by = "name")
-```
-
-```
-## # A tibble: 87 x 14
-##    name  height_m height  mass hair_color skin_color eye_color birth_year gender
-##    &lt;chr&gt;    &lt;dbl&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; 
-##  1 Luke…     1.72    172    77 blond      fair       blue            19   male  
-##  2 C-3PO     1.67    167    75 &lt;NA&gt;       gold       yellow         112   &lt;NA&gt;  
-##  3 R2-D2     0.96     96    32 &lt;NA&gt;       white, bl… red             33   &lt;NA&gt;  
-##  4 Dart…     2.02    202   136 none       white      yellow          41.9 male  
-##  5 Leia…     1.5     150    49 brown      light      brown           19   female
-##  6 Owen…     1.78    178   120 brown, gr… light      blue            52   male  
-##  7 Beru…     1.65    165    75 brown      light      blue            47   female
-##  8 R5-D4     0.97     97    32 &lt;NA&gt;       white, red red             NA   &lt;NA&gt;  
-##  9 Bigg…     1.83    183    84 black      light      brown           24   male  
-## 10 Obi-…     1.82    182    77 auburn, w… fair       blue-gray       57   male  
-## # … with 77 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
-## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;
-```
-
-
----
-# What else can you do?
-
-- conditional functions: `*_at`, `*_if`, `*_all`
-- `lead` &amp; `lag` for time series
-- `inner_join`,`semi_join`
-- `bind_cols`, `bind_rows`
-
----
-class: center, middle
-
-# `tidyr` functions
-
-&lt;img src="img/tidyr.png" width=30%&gt;
-
----
-
-### spread == pivot_wider
-
-### gather == pivot_longer
-
-![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/tidyr-spread-gather.gif)
-
----
-
-# Community matrix!
-
-
-```r
-sw &lt;- starwars %&gt;% 
-  select(name, films) %&gt;% 
-  unnest(films) %&gt;% 
-  mutate(present = 1) %&gt;% 
-  pivot_wider(names_from = name,values_from = present,values_fill = list(present = 0)) %&gt;% 
-  janitor::clean_names() %&gt;% 
-  print()
-```
-
-```
-## # A tibble: 7 x 88
-##   films luke_skywalker c_3po r2_d2 darth_vader leia_organa owen_lars
-##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
-## 1 Reve…              1     1     1           1           1         1
-## 2 Retu…              1     1     1           1           1         0
-## 3 The …              1     1     1           1           1         0
-## 4 A Ne…              1     1     1           1           1         1
-## 5 The …              1     0     1           0           1         0
-## 6 Atta…              0     1     1           0           0         1
-## 7 The …              0     1     1           0           0         0
-## # … with 81 more variables: beru_whitesun_lars &lt;dbl&gt;, r5_d4 &lt;dbl&gt;,
-## #   biggs_darklighter &lt;dbl&gt;, obi_wan_kenobi &lt;dbl&gt;, anakin_skywalker &lt;dbl&gt;,
-## #   wilhuff_tarkin &lt;dbl&gt;, chewbacca &lt;dbl&gt;, han_solo &lt;dbl&gt;, greedo &lt;dbl&gt;,
-## #   jabba_desilijic_tiure &lt;dbl&gt;, wedge_antilles &lt;dbl&gt;, jek_tono_porkins &lt;dbl&gt;,
-## #   yoda &lt;dbl&gt;, palpatine &lt;dbl&gt;, boba_fett &lt;dbl&gt;, ig_88 &lt;dbl&gt;, bossk &lt;dbl&gt;,
-## #   lando_calrissian &lt;dbl&gt;, lobot &lt;dbl&gt;, ackbar &lt;dbl&gt;, mon_mothma &lt;dbl&gt;,
-## #   arvel_crynyd &lt;dbl&gt;, wicket_systri_warrick &lt;dbl&gt;, nien_nunb &lt;dbl&gt;,
-## #   qui_gon_jinn &lt;dbl&gt;, nute_gunray &lt;dbl&gt;, finis_valorum &lt;dbl&gt;,
-## #   jar_jar_binks &lt;dbl&gt;, roos_tarpals &lt;dbl&gt;, rugor_nass &lt;dbl&gt;, ric_olie &lt;dbl&gt;,
-## #   watto &lt;dbl&gt;, sebulba &lt;dbl&gt;, quarsh_panaka &lt;dbl&gt;, shmi_skywalker &lt;dbl&gt;,
-## #   darth_maul &lt;dbl&gt;, bib_fortuna &lt;dbl&gt;, ayla_secura &lt;dbl&gt;, dud_bolt &lt;dbl&gt;,
-## #   gasgano &lt;dbl&gt;, ben_quadinaros &lt;dbl&gt;, mace_windu &lt;dbl&gt;, ki_adi_mundi &lt;dbl&gt;,
-## #   kit_fisto &lt;dbl&gt;, eeth_koth &lt;dbl&gt;, adi_gallia &lt;dbl&gt;, saesee_tiin &lt;dbl&gt;,
-## #   yarael_poof &lt;dbl&gt;, plo_koon &lt;dbl&gt;, mas_amedda &lt;dbl&gt;, gregar_typho &lt;dbl&gt;,
-## #   corde &lt;dbl&gt;, cliegg_lars &lt;dbl&gt;, poggle_the_lesser &lt;dbl&gt;,
-## #   luminara_unduli &lt;dbl&gt;, barriss_offee &lt;dbl&gt;, dorme &lt;dbl&gt;, dooku &lt;dbl&gt;,
-## #   bail_prestor_organa &lt;dbl&gt;, jango_fett &lt;dbl&gt;, zam_wesell &lt;dbl&gt;,
-## #   dexter_jettster &lt;dbl&gt;, lama_su &lt;dbl&gt;, taun_we &lt;dbl&gt;, jocasta_nu &lt;dbl&gt;,
-## #   ratts_tyerell &lt;dbl&gt;, r4_p17 &lt;dbl&gt;, wat_tambor &lt;dbl&gt;, san_hill &lt;dbl&gt;,
-## #   shaak_ti &lt;dbl&gt;, grievous &lt;dbl&gt;, tarfful &lt;dbl&gt;, raymus_antilles &lt;dbl&gt;,
-## #   sly_moore &lt;dbl&gt;, tion_medon &lt;dbl&gt;, finn &lt;dbl&gt;, rey &lt;dbl&gt;,
-## #   poe_dameron &lt;dbl&gt;, bb8 &lt;dbl&gt;, captain_phasma &lt;dbl&gt;, padme_amidala &lt;dbl&gt;
-```
-
----
-
-# Gather back the community matrix to a long format
-
-
-```r
-sw %&gt;% 
-  pivot_longer(cols = -films,names_to = "name",values_to = "present")
-```
-
-```
-## # A tibble: 609 x 3
-##    films               name               present
-##    &lt;chr&gt;               &lt;chr&gt;                &lt;dbl&gt;
-##  1 Revenge of the Sith luke_skywalker           1
-##  2 Revenge of the Sith c_3po                    1
-##  3 Revenge of the Sith r2_d2                    1
-##  4 Revenge of the Sith darth_vader              1
-##  5 Revenge of the Sith leia_organa              1
-##  6 Revenge of the Sith owen_lars                1
-##  7 Revenge of the Sith beru_whitesun_lars       1
-##  8 Revenge of the Sith r5_d4                    0
-##  9 Revenge of the Sith biggs_darklighter        0
-## 10 Revenge of the Sith obi_wan_kenobi           1
-## # … with 599 more rows
-```
----
 class: center, middle
 
 # `readr` package
@@ -769,7 +339,7 @@ class: center, middle
 
 * Most useful are `read_csv`, `read_table`, and `read_delim`
 
-* Competible with pipe workflow
+* Compatible with pipe workflow
 
 ---
 # Example
@@ -902,6 +472,471 @@ mydata %&gt;%
 ```
 
 ---
+class: center, middle
+# `dplyr` function
+
+
+&lt;img src="img/dplyr.png" width=30%&gt;
+
+---
+# Load the Star Wars data
+
+
+```r
+library(tidyverse)
+data(starwars)
+starwars
+```
+
+```
+## # A tibble: 87 x 14
+##    name  height  mass hair_color skin_color eye_color birth_year sex   gender
+##    &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+##  1 Luke…    172    77 blond      fair       blue            19   male  mascu…
+##  2 C-3PO    167    75 &lt;NA&gt;       gold       yellow         112   none  mascu…
+##  3 R2-D2     96    32 &lt;NA&gt;       white, bl… red             33   none  mascu…
+##  4 Dart…    202   136 none       white      yellow          41.9 male  mascu…
+##  5 Leia…    150    49 brown      light      brown           19   fema… femin…
+##  6 Owen…    178   120 brown, gr… light      blue            52   male  mascu…
+##  7 Beru…    165    75 brown      light      blue            47   fema… femin…
+##  8 R5-D4     97    32 &lt;NA&gt;       white, red red             NA   none  mascu…
+##  9 Bigg…    183    84 black      light      brown           24   male  mascu…
+## 10 Obi-…    182    77 auburn, w… fair       blue-gray       57   male  mascu…
+## # … with 77 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
+## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;
+```
+---
+
+# `select()`
+
+![](img/xls-select.PNG)
+
+---
+
+# Example: Select the name, height, mass, and species columns only
+
+
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species)
+```
+
+```
+## # A tibble: 87 x 4
+##    name               height  mass species
+##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  
+##  1 Luke Skywalker        172    77 Human  
+##  2 C-3PO                 167    75 Droid  
+##  3 R2-D2                  96    32 Droid  
+##  4 Darth Vader           202   136 Human  
+##  5 Leia Organa           150    49 Human  
+##  6 Owen Lars             178   120 Human  
+##  7 Beru Whitesun lars    165    75 Human  
+##  8 R5-D4                  97    32 Droid  
+##  9 Biggs Darklighter     183    84 Human  
+## 10 Obi-Wan Kenobi        182    77 Human  
+## # … with 77 more rows
+```
+
+---
+
+# Select everything but the column mass
+
+```r
+starwars %&gt;% 
+    select(-mass)
+```
+
+```
+## # A tibble: 87 x 13
+##    name  height hair_color skin_color eye_color birth_year sex   gender
+##    &lt;chr&gt;  &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+##  1 Luke…    172 blond      fair       blue            19   male  mascu…
+##  2 C-3PO    167 &lt;NA&gt;       gold       yellow         112   none  mascu…
+##  3 R2-D2     96 &lt;NA&gt;       white, bl… red             33   none  mascu…
+##  4 Dart…    202 none       white      yellow          41.9 male  mascu…
+##  5 Leia…    150 brown      light      brown           19   fema… femin…
+##  6 Owen…    178 brown, gr… light      blue            52   male  mascu…
+##  7 Beru…    165 brown      light      blue            47   fema… femin…
+##  8 R5-D4     97 &lt;NA&gt;       white, red red             NA   none  mascu…
+##  9 Bigg…    183 black      light      brown           24   male  mascu…
+## 10 Obi-…    182 auburn, w… fair       blue-gray       57   male  mascu…
+## # … with 77 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
+## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;
+```
+---
+
+# `mutate()`
+
+![](img/xls-mutate.PNG)
+---
+
+# Example: Add a bmi column (`mass/(0.01*height)^2`)
+
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species) %&gt;% 
+    mutate(bmi = mass/(0.01*height)^2)
+```
+
+```
+## # A tibble: 87 x 5
+##    name               height  mass species   bmi
+##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+##  1 Luke Skywalker        172    77 Human    26.0
+##  2 C-3PO                 167    75 Droid    26.9
+##  3 R2-D2                  96    32 Droid    34.7
+##  4 Darth Vader           202   136 Human    33.3
+##  5 Leia Organa           150    49 Human    21.8
+##  6 Owen Lars             178   120 Human    37.9
+##  7 Beru Whitesun lars    165    75 Human    27.5
+##  8 R5-D4                  97    32 Droid    34.0
+##  9 Biggs Darklighter     183    84 Human    25.1
+## 10 Obi-Wan Kenobi        182    77 Human    23.2
+## # … with 77 more rows
+```
+
+---
+class: exercise
+
+# Lets start practicing 
+
+Select the columns sex, birth year, species, and height and add a column that calculate the average height for each species
+
+---
+
+# `arrange()`
+
+![](img/xls-arrange.PNG)
+---
+
+# Sort the data based on the bmi
+
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species) %&gt;% 
+    mutate(bmi = mass/(0.01*height)^2) %&gt;% 
+    arrange(desc(bmi))
+```
+
+```
+## # A tibble: 87 x 5
+##    name                  height  mass species          bmi
+##    &lt;chr&gt;                  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;
+##  1 Jabba Desilijic Tiure    175  1358 Hutt           443. 
+##  2 Dud Bolt                  94    45 Vulptereen      50.9
+##  3 Yoda                      66    17 Yoda's species  39.0
+##  4 Owen Lars                178   120 Human           37.9
+##  5 IG-88                    200   140 Droid           35  
+##  6 R2-D2                     96    32 Droid           34.7
+##  7 Grievous                 216   159 Kaleesh         34.1
+##  8 R5-D4                     97    32 Droid           34.0
+##  9 Jek Tono Porkins         180   110 Human           34.0
+## 10 Darth Vader              202   136 Human           33.3
+## # … with 77 more rows
+```
+
+---
+# `filter()`
+
+![](img/xls-filter.PNG)
+
+---
+
+
+# Filter the data to have only Droids (found in species column)
+
+--
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species) %&gt;% 
+    mutate(bmi = mass/(0.01*height)^2) %&gt;% 
+    filter(species == "Droid")
+```
+
+```
+## # A tibble: 6 x 5
+##   name   height  mass species   bmi
+##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1 C-3PO     167    75 Droid    26.9
+## 2 R2-D2      96    32 Droid    34.7
+## 3 R5-D4      97    32 Droid    34.0
+## 4 IG-88     200   140 Droid    35  
+## 5 R4-P17     96    NA Droid    NA  
+## 6 BB8        NA    NA Droid    NA
+```
+
+---
+# Filter the same data to have only Droids shorter than 100 cm
+
+--
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species) %&gt;% 
+    mutate(bmi = mass/(0.01*height)^2) %&gt;% 
+    filter(species == "Droid", height &lt; 100)
+```
+
+```
+## # A tibble: 3 x 5
+##   name   height  mass species   bmi
+##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1 R2-D2      96    32 Droid    34.7
+## 2 R5-D4      97    32 Droid    34.0
+## 3 R4-P17     96    NA Droid    NA
+```
+
+---
+# `group_by(), summarize()`
+
+![](img/xls-summary.PNG)
+---
+
+## Create a summary data in which you have the average mass, maximum height, and the number of individuals from each species, and sort it by the number of individuals
+--
+
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species) %&gt;% 
+    group_by(species) %&gt;% 
+    summarize(count = n(),
+              avg_mass = mean(mass, na.rm = TRUE),
+              max_height = max(height, na.rm = TRUE)) %&gt;% 
+    arrange(desc(count))
+```
+
+```
+## # A tibble: 38 x 4
+##    species  count avg_mass max_height
+##    &lt;chr&gt;    &lt;int&gt;    &lt;dbl&gt;      &lt;int&gt;
+##  1 Human       35     82.8        202
+##  2 Droid        6     69.8        200
+##  3 &lt;NA&gt;         4     48          183
+##  4 Gungan       3     74          224
+##  5 Kaminoan     2     88          229
+##  6 Mirialan     2     53.1        170
+##  7 Twi'lek      2     55          180
+##  8 Wookiee      2    124          234
+##  9 Zabrak       2     80          175
+## 10 Aleena       1     15           79
+## # … with 28 more rows
+```
+
+---
+
+class: exercise
+
+# Your turn
+
+What is the most common eye color?
+
+Who is the youngest human?
+
+Which homeworld has the most characters?
+
+---
+# Rename columns with `rename()`
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species) %&gt;% 
+    rename(char_name = name)
+```
+
+```
+## # A tibble: 87 x 4
+##    char_name          height  mass species
+##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  
+##  1 Luke Skywalker        172    77 Human  
+##  2 C-3PO                 167    75 Droid  
+##  3 R2-D2                  96    32 Droid  
+##  4 Darth Vader           202   136 Human  
+##  5 Leia Organa           150    49 Human  
+##  6 Owen Lars             178   120 Human  
+##  7 Beru Whitesun lars    165    75 Human  
+##  8 R5-D4                  97    32 Droid  
+##  9 Biggs Darklighter     183    84 Human  
+## 10 Obi-Wan Kenobi        182    77 Human  
+## # … with 77 more rows
+```
+---
+# `rename_all()`
+
+Change all the column names to upper case
+
+```r
+starwars %&gt;% 
+    select(name, height, mass, species) %&gt;% 
+    rename_all(toupper)
+```
+
+```
+## # A tibble: 87 x 4
+##    NAME               HEIGHT  MASS SPECIES
+##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  
+##  1 Luke Skywalker        172    77 Human  
+##  2 C-3PO                 167    75 Droid  
+##  3 R2-D2                  96    32 Droid  
+##  4 Darth Vader           202   136 Human  
+##  5 Leia Organa           150    49 Human  
+##  6 Owen Lars             178   120 Human  
+##  7 Beru Whitesun lars    165    75 Human  
+##  8 R5-D4                  97    32 Droid  
+##  9 Biggs Darklighter     183    84 Human  
+## 10 Obi-Wan Kenobi        182    77 Human  
+## # … with 77 more rows
+```
+
+---
+# `left_join()`
+
+
+```r
+starwars %&gt;% 
+  mutate(height_m = height*0.01) %&gt;% 
+  select(name,height_m) %&gt;% 
+  left_join(starwars,by = "name")
+```
+
+```
+## # A tibble: 87 x 15
+##    name  height_m height  mass hair_color skin_color eye_color birth_year sex  
+##    &lt;chr&gt;    &lt;dbl&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;
+##  1 Luke…     1.72    172    77 blond      fair       blue            19   male 
+##  2 C-3PO     1.67    167    75 &lt;NA&gt;       gold       yellow         112   none 
+##  3 R2-D2     0.96     96    32 &lt;NA&gt;       white, bl… red             33   none 
+##  4 Dart…     2.02    202   136 none       white      yellow          41.9 male 
+##  5 Leia…     1.5     150    49 brown      light      brown           19   fema…
+##  6 Owen…     1.78    178   120 brown, gr… light      blue            52   male 
+##  7 Beru…     1.65    165    75 brown      light      blue            47   fema…
+##  8 R5-D4     0.97     97    32 &lt;NA&gt;       white, red red             NA   none 
+##  9 Bigg…     1.83    183    84 black      light      brown           24   male 
+## 10 Obi-…     1.82    182    77 auburn, w… fair       blue-gray       57   male 
+## # … with 77 more rows, and 6 more variables: gender &lt;chr&gt;, homeworld &lt;chr&gt;,
+## #   species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;
+```
+
+---
+class: exercise
+
+# Practice time!
+
+Create a new data with species mass, calculate the bmi, and join it with the starwars data
+
+---
+# What else can you do?
+
+- conditional functions: `*_at`, `*_if`, `*_all`
+- `lead` &amp; `lag` for time series
+- `inner_join`,`semi_join`
+- `bind_cols`, `bind_rows`
+
+---
+class: center, middle
+
+# `tidyr` functions
+
+&lt;img src="img/tidyr.png" width=30%&gt;
+
+---
+
+### spread == pivot_wider
+
+### gather == pivot_longer
+
+![](https://raw.githubusercontent.com/gadenbuie/tidyexplain/master/images/tidyr-spread-gather.gif)
+
+---
+
+# Community matrix!
+
+
+```r
+sw &lt;- starwars %&gt;% 
+  select(name, films) %&gt;% 
+  unnest(films) %&gt;% 
+  mutate(present = 1) %&gt;% 
+  pivot_wider(names_from = name,values_from = present,values_fill = list(present = 0)) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  print()
+```
+
+```
+## # A tibble: 7 x 88
+##   films luke_skywalker c_3po r2_d2 darth_vader leia_organa owen_lars
+##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1 The …              1     1     1           1           1         0
+## 2 Reve…              1     1     1           1           1         1
+## 3 Retu…              1     1     1           1           1         0
+## 4 A Ne…              1     1     1           1           1         1
+## 5 The …              1     0     1           0           1         0
+## 6 Atta…              0     1     1           0           0         1
+## 7 The …              0     1     1           0           0         0
+## # … with 81 more variables: beru_whitesun_lars &lt;dbl&gt;, r5_d4 &lt;dbl&gt;,
+## #   biggs_darklighter &lt;dbl&gt;, obi_wan_kenobi &lt;dbl&gt;, anakin_skywalker &lt;dbl&gt;,
+## #   wilhuff_tarkin &lt;dbl&gt;, chewbacca &lt;dbl&gt;, han_solo &lt;dbl&gt;, greedo &lt;dbl&gt;,
+## #   jabba_desilijic_tiure &lt;dbl&gt;, wedge_antilles &lt;dbl&gt;, jek_tono_porkins &lt;dbl&gt;,
+## #   yoda &lt;dbl&gt;, palpatine &lt;dbl&gt;, boba_fett &lt;dbl&gt;, ig_88 &lt;dbl&gt;, bossk &lt;dbl&gt;,
+## #   lando_calrissian &lt;dbl&gt;, lobot &lt;dbl&gt;, ackbar &lt;dbl&gt;, mon_mothma &lt;dbl&gt;,
+## #   arvel_crynyd &lt;dbl&gt;, wicket_systri_warrick &lt;dbl&gt;, nien_nunb &lt;dbl&gt;,
+## #   qui_gon_jinn &lt;dbl&gt;, nute_gunray &lt;dbl&gt;, finis_valorum &lt;dbl&gt;,
+## #   jar_jar_binks &lt;dbl&gt;, roos_tarpals &lt;dbl&gt;, rugor_nass &lt;dbl&gt;, ric_olie &lt;dbl&gt;,
+## #   watto &lt;dbl&gt;, sebulba &lt;dbl&gt;, quarsh_panaka &lt;dbl&gt;, shmi_skywalker &lt;dbl&gt;,
+## #   darth_maul &lt;dbl&gt;, bib_fortuna &lt;dbl&gt;, ayla_secura &lt;dbl&gt;, dud_bolt &lt;dbl&gt;,
+## #   gasgano &lt;dbl&gt;, ben_quadinaros &lt;dbl&gt;, mace_windu &lt;dbl&gt;, ki_adi_mundi &lt;dbl&gt;,
+## #   kit_fisto &lt;dbl&gt;, eeth_koth &lt;dbl&gt;, adi_gallia &lt;dbl&gt;, saesee_tiin &lt;dbl&gt;,
+## #   yarael_poof &lt;dbl&gt;, plo_koon &lt;dbl&gt;, mas_amedda &lt;dbl&gt;, gregar_typho &lt;dbl&gt;,
+## #   corde &lt;dbl&gt;, cliegg_lars &lt;dbl&gt;, poggle_the_lesser &lt;dbl&gt;,
+## #   luminara_unduli &lt;dbl&gt;, barriss_offee &lt;dbl&gt;, dorme &lt;dbl&gt;, dooku &lt;dbl&gt;,
+## #   bail_prestor_organa &lt;dbl&gt;, jango_fett &lt;dbl&gt;, zam_wesell &lt;dbl&gt;,
+## #   dexter_jettster &lt;dbl&gt;, lama_su &lt;dbl&gt;, taun_we &lt;dbl&gt;, jocasta_nu &lt;dbl&gt;,
+## #   ratts_tyerell &lt;dbl&gt;, r4_p17 &lt;dbl&gt;, wat_tambor &lt;dbl&gt;, san_hill &lt;dbl&gt;,
+## #   shaak_ti &lt;dbl&gt;, grievous &lt;dbl&gt;, tarfful &lt;dbl&gt;, raymus_antilles &lt;dbl&gt;,
+## #   sly_moore &lt;dbl&gt;, tion_medon &lt;dbl&gt;, finn &lt;dbl&gt;, rey &lt;dbl&gt;,
+## #   poe_dameron &lt;dbl&gt;, bb8 &lt;dbl&gt;, captain_phasma &lt;dbl&gt;, padme_amidala &lt;dbl&gt;
+```
+
+---
+
+# Gather back the community matrix to a long format
+
+
+```r
+sw %&gt;% 
+  pivot_longer(cols = -films,names_to = "name",values_to = "present")
+```
+
+```
+## # A tibble: 609 x 3
+##    films                   name               present
+##    &lt;chr&gt;                   &lt;chr&gt;                &lt;dbl&gt;
+##  1 The Empire Strikes Back luke_skywalker           1
+##  2 The Empire Strikes Back c_3po                    1
+##  3 The Empire Strikes Back r2_d2                    1
+##  4 The Empire Strikes Back darth_vader              1
+##  5 The Empire Strikes Back leia_organa              1
+##  6 The Empire Strikes Back owen_lars                0
+##  7 The Empire Strikes Back beru_whitesun_lars       0
+##  8 The Empire Strikes Back r5_d4                    0
+##  9 The Empire Strikes Back biggs_darklighter        0
+## 10 The Empire Strikes Back obi_wan_kenobi           1
+## # … with 599 more rows
+```
+
+---
+class: exercise
+
+#Lets practice!
+
+create a long format of the subset data species, mass, height, and birth year with the species column, one column with the categories mass,height, birth year and one column with the values
+
+---
 # `nest` datasets
 
 Useful when you want to run analyses group based but run it only ones
@@ -916,15 +951,13 @@ nested_sw&lt;- starwars %&gt;%
 ```
 
 ```
-## # A tibble: 5 x 2
-## # Groups:   gender [5]
-##   gender        data             
-##   &lt;chr&gt;         &lt;list&gt;           
-## 1 male          &lt;tibble [62 × 5]&gt;
-## 2 &lt;NA&gt;          &lt;tibble [3 × 5]&gt; 
-## 3 female        &lt;tibble [19 × 5]&gt;
-## 4 hermaphrodite &lt;tibble [1 × 5]&gt; 
-## 5 none          &lt;tibble [2 × 5]&gt;
+## # A tibble: 3 x 2
+## # Groups:   gender [3]
+##   gender    data             
+##   &lt;chr&gt;     &lt;list&gt;           
+## 1 masculine &lt;tibble [66 × 5]&gt;
+## 2 feminine  &lt;tibble [17 × 5]&gt;
+## 3 &lt;NA&gt;      &lt;tibble [4 × 5]&gt;
 ```
 
 ---
@@ -937,20 +970,20 @@ nested_sw$data[1]
 
 ```
 ## [[1]]
-## # A tibble: 62 x 5
+## # A tibble: 66 x 5
 ##    name              height films      mass species
 ##    &lt;chr&gt;              &lt;int&gt; &lt;list&gt;    &lt;dbl&gt; &lt;chr&gt;  
 ##  1 Luke Skywalker       172 &lt;chr [5]&gt;    77 Human  
-##  2 Darth Vader          202 &lt;chr [4]&gt;   136 Human  
-##  3 Owen Lars            178 &lt;chr [3]&gt;   120 Human  
-##  4 Biggs Darklighter    183 &lt;chr [1]&gt;    84 Human  
-##  5 Obi-Wan Kenobi       182 &lt;chr [6]&gt;    77 Human  
-##  6 Anakin Skywalker     188 &lt;chr [3]&gt;    84 Human  
-##  7 Wilhuff Tarkin       180 &lt;chr [2]&gt;    NA Human  
-##  8 Chewbacca            228 &lt;chr [5]&gt;   112 Wookiee
-##  9 Han Solo             180 &lt;chr [4]&gt;    80 Human  
-## 10 Greedo               173 &lt;chr [1]&gt;    74 Rodian 
-## # … with 52 more rows
+##  2 C-3PO                167 &lt;chr [6]&gt;    75 Droid  
+##  3 R2-D2                 96 &lt;chr [7]&gt;    32 Droid  
+##  4 Darth Vader          202 &lt;chr [4]&gt;   136 Human  
+##  5 Owen Lars            178 &lt;chr [3]&gt;   120 Human  
+##  6 R5-D4                 97 &lt;chr [1]&gt;    32 Droid  
+##  7 Biggs Darklighter    183 &lt;chr [1]&gt;    84 Human  
+##  8 Obi-Wan Kenobi       182 &lt;chr [6]&gt;    77 Human  
+##  9 Anakin Skywalker     188 &lt;chr [3]&gt;    84 Human  
+## 10 Wilhuff Tarkin       180 &lt;chr [2]&gt;    NA Human  
+## # … with 56 more rows
 ```
 
 ---
@@ -974,85 +1007,52 @@ starwars %&gt;%
 ```
 
 ```
-## $female
+## $feminine
 ## 
 ## Call:
 ## lm(formula = height ~ mass, data = .)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -20.344  -4.529  -1.155   7.778  13.685 
+## -19.005  -3.773  -1.351   8.533  14.938 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 171.7448    22.5013   7.633 6.12e-05 ***
-## mass         -0.0286     0.4121  -0.069    0.946    
+## (Intercept) 166.1725    24.1378   6.884 0.000235 ***
+## mass          0.0578     0.4366   0.132 0.898409    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 10.35 on 8 degrees of freedom
-##   (9 observations deleted due to missingness)
-## Multiple R-squared:  0.0006016,	Adjusted R-squared:  -0.1243 
-## F-statistic: 0.004815 on 1 and 8 DF,  p-value: 0.9464
+## Residual standard error: 10.61 on 7 degrees of freedom
+##   (8 observations deleted due to missingness)
+## Multiple R-squared:  0.002497,	Adjusted R-squared:  -0.14 
+## F-statistic: 0.01752 on 1 and 7 DF,  p-value: 0.8984
 ## 
 ## 
-## $hermaphrodite
-## 
-## Call:
-## lm(formula = height ~ mass, data = .)
-## 
-## Residuals:
-## ALL 1 residuals are 0: no residual degrees of freedom!
-## 
-## Coefficients: (1 not defined because of singularities)
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)      175         NA      NA       NA
-## mass              NA         NA      NA       NA
-## 
-## Residual standard error: NaN on 0 degrees of freedom
-## 
-## 
-## $male
+## $masculine
 ## 
 ## Call:
 ## lm(formula = height ~ mass, data = .)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -46.837  -4.007   2.112   8.901  49.071 
+##      Min       1Q   Median       3Q      Max 
+## -106.365   -3.947    8.917   19.790   58.390 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  94.4452    10.6859   8.838 3.91e-11 ***
-## mass          1.0309     0.1247   8.265 2.39e-10 ***
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 171.90167    6.41633  26.791   &lt;2e-16 ***
+## mass          0.02727    0.03032   0.899    0.373    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 23.08 on 42 degrees of freedom
-##   (18 observations deleted due to missingness)
-## Multiple R-squared:  0.6193,	Adjusted R-squared:  0.6102 
-## F-statistic: 68.32 on 1 and 42 DF,  p-value: 2.391e-10
-## 
-## 
-## $none
-## 
-## Call:
-## lm(formula = height ~ mass, data = .)
-## 
-## Residuals:
-## ALL 1 residuals are 0: no residual degrees of freedom!
-## 
-## Coefficients: (1 not defined because of singularities)
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)      200         NA      NA       NA
-## mass              NA         NA      NA       NA
-## 
-## Residual standard error: NaN on 0 degrees of freedom
-##   (1 observation deleted due to missingness)
+## Residual standard error: 38.86 on 47 degrees of freedom
+##   (17 observations deleted due to missingness)
+## Multiple R-squared:  0.01692,	Adjusted R-squared:  -0.004001 
+## F-statistic: 0.8087 on 1 and 47 DF,  p-value: 0.3731
 ```
 
 ---
-# Combin `nest()` with `map()`
+# Combine `nest()` with `map()`
 
 
 ```r
@@ -1064,15 +1064,13 @@ lm_nest&lt;- starwars %&gt;%
 ```
 
 ```
-## # A tibble: 5 x 3
-## # Groups:   gender [5]
-##   gender        data               lm_results
-##   &lt;chr&gt;         &lt;list&gt;             &lt;list&gt;    
-## 1 male          &lt;tibble [62 × 12]&gt; &lt;smmry.lm&gt;
-## 2 &lt;NA&gt;          &lt;tibble [3 × 12]&gt;  &lt;smmry.lm&gt;
-## 3 female        &lt;tibble [19 × 12]&gt; &lt;smmry.lm&gt;
-## 4 hermaphrodite &lt;tibble [1 × 12]&gt;  &lt;smmry.lm&gt;
-## 5 none          &lt;tibble [2 × 12]&gt;  &lt;smmry.lm&gt;
+## # A tibble: 3 x 3
+## # Groups:   gender [3]
+##   gender    data               lm_results
+##   &lt;chr&gt;     &lt;list&gt;             &lt;list&gt;    
+## 1 masculine &lt;tibble [66 × 13]&gt; &lt;smmry.lm&gt;
+## 2 feminine  &lt;tibble [17 × 13]&gt; &lt;smmry.lm&gt;
+## 3 &lt;NA&gt;      &lt;tibble [4 × 13]&gt;  &lt;smmry.lm&gt;
 ```
 
 ---
@@ -1088,20 +1086,20 @@ lm_nest$lm_results[1]
 ## lm(formula = height ~ mass, data = .)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -46.837  -4.007   2.112   8.901  49.071 
+##      Min       1Q   Median       3Q      Max 
+## -106.365   -3.947    8.917   19.790   58.390 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  94.4452    10.6859   8.838 3.91e-11 ***
-## mass          1.0309     0.1247   8.265 2.39e-10 ***
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 171.90167    6.41633  26.791   &lt;2e-16 ***
+## mass          0.02727    0.03032   0.899    0.373    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 23.08 on 42 degrees of freedom
-##   (18 observations deleted due to missingness)
-## Multiple R-squared:  0.6193,	Adjusted R-squared:  0.6102 
-## F-statistic: 68.32 on 1 and 42 DF,  p-value: 2.391e-10
+## Residual standard error: 38.86 on 47 degrees of freedom
+##   (17 observations deleted due to missingness)
+## Multiple R-squared:  0.01692,	Adjusted R-squared:  -0.004001 
+## F-statistic: 0.8087 on 1 and 47 DF,  p-value: 0.3731
 ```
 
 ---
@@ -1125,17 +1123,30 @@ broom::tidy(lm_nest$lm_results[[1]])
 ## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)    94.4     10.7        8.84 3.91e-11
-## 2 mass            1.03     0.125      8.27 2.39e-10
+## 1 (Intercept) 172.        6.42      26.8   4.06e-30
+## 2 mass          0.0273    0.0303     0.899 3.73e- 1
 ```
 
+
 ---
---- 
+class: exercise
 
-.center[
+# Your turn!
+
+Group the starwars dataset based on sex and nest it. 
+
+Add a column with linear model summary for each species 
+
+Add a column with a plot for the height as a function of mass for each sex
+
+plot all the plots side by side (use `cowplot` package)
+
+---
+
+
+class: inverse, center, middle
+
 # Other function that are compatible with ` %&gt;% `
-]
-
 
 ---
 
@@ -1151,7 +1162,7 @@ starwars %&gt;%
   theme(legend.position = "none")
 ```
 
-![](datawrangling_tidyverse_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+![](datawrangling_tidyverse_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
 
 ---
 ### omit all rows that contain `NA` somewhere in the data
@@ -1163,19 +1174,19 @@ starwars %&gt;%
 ```
 
 ```
-## # A tibble: 29 x 13
-##    name  height  mass hair_color skin_color eye_color birth_year gender
-##    &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; 
-##  1 Luke…    172    77 blond      fair       blue            19   male  
-##  2 Dart…    202   136 none       white      yellow          41.9 male  
-##  3 Leia…    150    49 brown      light      brown           19   female
-##  4 Owen…    178   120 brown, gr… light      blue            52   male  
-##  5 Beru…    165    75 brown      light      blue            47   female
-##  6 Bigg…    183    84 black      light      brown           24   male  
-##  7 Obi-…    182    77 auburn, w… fair       blue-gray       57   male  
-##  8 Anak…    188    84 blond      fair       blue            41.9 male  
-##  9 Chew…    228   112 brown      unknown    blue           200   male  
-## 10 Han …    180    80 brown      fair       brown           29   male  
+## # A tibble: 29 x 14
+##    name  height  mass hair_color skin_color eye_color birth_year sex   gender
+##    &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+##  1 Luke…    172    77 blond      fair       blue            19   male  mascu…
+##  2 Dart…    202   136 none       white      yellow          41.9 male  mascu…
+##  3 Leia…    150    49 brown      light      brown           19   fema… femin…
+##  4 Owen…    178   120 brown, gr… light      blue            52   male  mascu…
+##  5 Beru…    165    75 brown      light      blue            47   fema… femin…
+##  6 Bigg…    183    84 black      light      brown           24   male  mascu…
+##  7 Obi-…    182    77 auburn, w… fair       blue-gray       57   male  mascu…
+##  8 Anak…    188    84 blond      fair       blue            41.9 male  mascu…
+##  9 Chew…    228   112 brown      unknown    blue           200   male  mascu…
+## 10 Han …    180    80 brown      fair       brown           29   male  mascu…
 ## # … with 19 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
 ## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;
 ```
@@ -1208,10 +1219,16 @@ starwars %&gt;%
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 17.9 on 2 degrees of freedom
-##   (1 observation deleted due to missingness)
+##   (2 observations deleted due to missingness)
 ## Multiple R-squared:  0.921,	Adjusted R-squared:  0.8815 
 ## F-statistic: 23.32 on 1 and 2 DF,  p-value: 0.04031
 ```
+
+---
+
+class: inverse, center, middle
+
+# That's it!
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>
