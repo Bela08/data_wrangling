@@ -258,7 +258,7 @@ class: exercise
 
 # Lets start practicing 
 
-Select the columns sex, birth year, species, and height and add a column that calculate the average height for each species
+Select the columns sex, birth year, species, and height and add a column that converts the height to meters
 
 ---
 
@@ -421,7 +421,7 @@ class: exercise
 
 #Lets practice!
 
-create a long format of the subset data species, mass, height, and birth year with the species column, one column with the categories mass,height, birth year and one column with the values
+create a long format of the subset data of species, mass, height, and birth year with the species column, one column with the categories mass,height, birth year and one column with the values
 
 ---
 # `nest` datasets
